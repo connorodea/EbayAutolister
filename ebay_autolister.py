@@ -522,71 +522,87 @@ class EbayAutolister:
         return results
     
     def create_sample_csv(self, file_path: str = "sample_products.csv"):
-        """Create a sample CSV file for testing"""
+        """Create a sample CSV file for testing with your specific condition inputs"""
         sample_data = [
             {
-                "sku": "TEST-001",
-                "title": "Apple iPhone 13 - Unlocked",
-                "description": "Apple iPhone 13 in excellent condition, fully unlocked and ready to use",
-                "condition": "used excellent",
-                "grade": "A",
-                "upc": "194252707005",
-                "category_id": "9355",  # Cell Phones & Smartphones
-                "price": 499.99,
+                "sku": "LIKE-NEW-001",
+                "title": "iPad Air 5th Gen - Like New Condition",
+                "description": "iPad Air 5th generation in like new condition, minimal signs of use",
+                "condition": "like new",
+                "grade": "",
+                "upc": "194252521175",
+                "category_id": "171485",  # Tablets & eBook Readers
+                "price": 449.99,
                 "quantity": 1,
                 "brand": "Apple",
-                "mpn": "MLPF3LL/A",
+                "mpn": "MM9F3LL/A",
+                "weight": 1.0,
+                "dimensions": "10x7x0.3",
+                "images": "https://example.com/ipad1.jpg,https://example.com/ipad2.jpg"
+            },
+            {
+                "sku": "VERY-GOOD-002",
+                "title": "MacBook Pro 13-inch - Very Good Condition",
+                "description": "MacBook Pro 13-inch in very good condition, light wear on corners",
+                "condition": "very good",
+                "grade": "",
+                "upc": "194252056844",
+                "category_id": "111422",  # Apple Laptops
+                "price": 899.99,
+                "quantity": 1,
+                "brand": "Apple",
+                "mpn": "MYD82LL/A",
+                "weight": 3.0,
+                "dimensions": "12x8x1",
+                "images": "https://example.com/macbook1.jpg"
+            },
+            {
+                "sku": "GOOD-003",
+                "title": "Nintendo Switch Console - Good Condition",
+                "description": "Nintendo Switch console in good condition, works perfectly with normal wear",
+                "condition": "good",
+                "grade": "",
+                "upc": "045496452063",
+                "category_id": "139971",  # Video Game Consoles
+                "price": 199.99,
+                "quantity": 2,
+                "brand": "Nintendo",
+                "mpn": "HAC-001(-01)",
+                "weight": 1.5,
+                "dimensions": "9x4x1",
+                "images": "https://example.com/switch1.jpg,https://example.com/switch2.jpg"
+            },
+            {
+                "sku": "ACCEPTABLE-004",
+                "title": "iPhone 12 - Acceptable Condition",
+                "description": "iPhone 12 in acceptable condition, heavy wear but fully functional",
+                "condition": "acceptable",
+                "grade": "",
+                "upc": "194252031407",
+                "category_id": "9355",  # Cell Phones & Smartphones
+                "price": 299.99,
+                "quantity": 1,
+                "brand": "Apple",
+                "mpn": "MGJ53LL/A",
+                "weight": 0.8,
+                "dimensions": "6x3x0.3",
+                "images": "https://example.com/iphone12.jpg"
+            },
+            {
+                "sku": "SALVAGE-005",
+                "title": "Samsung Galaxy S21 - Salvage/Parts Only",
+                "description": "Samsung Galaxy S21 for parts or repair, cracked screen, battery issues",
+                "condition": "salvage",
+                "grade": "",
+                "upc": "887276459042",
+                "category_id": "9355",  # Cell Phones & Smartphones
+                "price": 89.99,
+                "quantity": 1,
+                "brand": "Samsung",
+                "mpn": "SM-G991U",
                 "weight": 0.7,
                 "dimensions": "6x3x0.3",
-                "images": "https://example.com/iphone1.jpg,https://example.com/iphone2.jpg"
-            },
-            {
-                "sku": "TEST-002",
-                "title": "Samsung Galaxy Watch4 - Open Box",
-                "description": "Samsung Galaxy Watch4 in open box condition, all accessories included",
-                "condition": "open box",
-                "grade": "",
-                "upc": "887276502946",
-                "category_id": "178893",  # Smart Watches
-                "price": 199.99,
-                "quantity": 3,
-                "brand": "Samsung",
-                "mpn": "SM-R870NZKAXAR",
-                "weight": 1.2,
-                "dimensions": "4x4x2",
-                "images": "https://example.com/watch1.jpg"
-            },
-            {
-                "sku": "TEST-003",
-                "title": "Pokemon Card - Charizard PSA 9",
-                "description": "Charizard Base Set 4/102 Holofoil PSA 9 Mint condition trading card",
-                "condition": "graded",
-                "grade": "9",
-                "upc": "",
-                "category_id": "2536",  # Trading Card Games
-                "price": 850.00,
-                "quantity": 1,
-                "brand": "Pokemon",
-                "mpn": "4/102",
-                "weight": 0.1,
-                "dimensions": "4x3x0.5",
-                "images": "https://example.com/charizard1.jpg,https://example.com/charizard2.jpg"
-            },
-            {
-                "sku": "TEST-004",
-                "title": "Sony PlayStation 5 - Seller Refurbished",
-                "description": "Sony PlayStation 5 console, refurbished by seller, tested and working perfectly",
-                "condition": "seller refurbished",
-                "grade": "B+",
-                "upc": "711719541509",
-                "category_id": "139971",  # Video Game Consoles
-                "price": 399.99,
-                "quantity": 2,
-                "brand": "Sony",
-                "mpn": "CFI-1115A",
-                "weight": 10.5,
-                "dimensions": "15x10x4",
-                "images": "https://example.com/ps5_1.jpg,https://example.com/ps5_2.jpg"
+                "images": "https://example.com/galaxy_salvage.jpg"
             }
         ]
         

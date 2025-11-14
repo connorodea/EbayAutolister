@@ -106,12 +106,17 @@ Required columns for your CSV file:
 
 The system intelligently maps your condition and grade inputs to eBay's standard conditions:
 
-**Condition Examples:**
+**Primary Condition Inputs:**
+- `"like new"` → `LIKE_NEW` *(Opened but in like-new condition)*
+- `"very good"` → `USED_VERY_GOOD` *(Light wear, excellent functionality)*
+- `"good"` → `USED_GOOD` *(Normal wear, fully functional)*
+- `"acceptable"` → `USED_ACCEPTABLE` *(Heavy wear but working)*
+- `"salvage"` → `FOR_PARTS_OR_NOT_WORKING` *(For parts or repair)*
+
+**Additional Condition Examples:**
 - `"new"`, `"brand new"`, `"sealed"` → `NEW`
 - `"open box"`, `"new open box"` → `NEW_OTHER`
-- `"used excellent"`, `"near mint"` → `USED_EXCELLENT`
 - `"seller refurbished"`, `"renewed"` → `SELLER_REFURBISHED`
-- `"for parts"`, `"broken"` → `FOR_PARTS_OR_NOT_WORKING`
 
 **Grade Mapping (PSA/BGS Scale):**
 - Grades `9-10` → `LIKE_NEW`

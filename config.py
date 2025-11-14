@@ -103,15 +103,30 @@ CATEGORY_MAPPINGS = {
 
 # Comprehensive condition mappings for eBay
 CONDITION_MAPPINGS = {
-    # New conditions
+    # Primary condition inputs (your system's conditions)
+    'like new': 'LIKE_NEW',           # 1) Like New
+    'very good': 'USED_VERY_GOOD',   # 2) Very Good  
+    'good': 'USED_GOOD',             # 3) Good
+    'acceptable': 'USED_ACCEPTABLE', # 4) Acceptable
+    'salvage': 'FOR_PARTS_OR_NOT_WORKING',  # 5) Salvage
+    
+    # Alternative spellings and variations
+    'likenew': 'LIKE_NEW',
+    'like-new': 'LIKE_NEW',
+    'verygood': 'USED_VERY_GOOD',
+    'very-good': 'USED_VERY_GOOD',
+    'vgood': 'USED_VERY_GOOD',
+    'v good': 'USED_VERY_GOOD',
+    'vg': 'USED_VERY_GOOD',
+    
+    # Standard conditions
     'new': 'NEW',
     'brand new': 'NEW',
     'sealed': 'NEW',
     'mint': 'NEW',
     'unopened': 'NEW',
     
-    # Like new / Open box
-    'like new': 'LIKE_NEW',
+    # Open box / Other new conditions
     'open box': 'NEW_OTHER',
     'new open box': 'NEW_OTHER',
     'new other': 'NEW_OTHER',
@@ -134,23 +149,20 @@ CONDITION_MAPPINGS = {
     'renewed': 'SELLER_REFURBISHED',
     'restored': 'SELLER_REFURBISHED',
     
-    # Used conditions
+    # Extended used conditions
     'used excellent': 'USED_EXCELLENT',
-    'used like new': 'USED_EXCELLENT',
+    'used like new': 'LIKE_NEW',
     'excellent': 'USED_EXCELLENT',
-    'near mint': 'USED_EXCELLENT',
+    'near mint': 'LIKE_NEW',
     
     'used very good': 'USED_VERY_GOOD',
-    'very good': 'USED_VERY_GOOD',
     'light wear': 'USED_VERY_GOOD',
     
     'used good': 'USED_GOOD',
-    'good': 'USED_GOOD',
     'moderate wear': 'USED_GOOD',
     'normal wear': 'USED_GOOD',
     
     'used acceptable': 'USED_ACCEPTABLE',
-    'acceptable': 'USED_ACCEPTABLE',
     'fair': 'USED_ACCEPTABLE',
     'heavy wear': 'USED_ACCEPTABLE',
     'well used': 'USED_ACCEPTABLE',
@@ -161,12 +173,15 @@ CONDITION_MAPPINGS = {
     'pre-owned excellent': 'PRE_OWNED_EXCELLENT',
     'pre-owned fair': 'PRE_OWNED_FAIR',
     
-    # Parts/repair
+    # Parts/repair/salvage
     'for parts': 'FOR_PARTS_OR_NOT_WORKING',
     'not working': 'FOR_PARTS_OR_NOT_WORKING',
     'broken': 'FOR_PARTS_OR_NOT_WORKING',
     'parts only': 'FOR_PARTS_OR_NOT_WORKING',
-    'repair': 'FOR_PARTS_OR_NOT_WORKING'
+    'repair': 'FOR_PARTS_OR_NOT_WORKING',
+    'damaged': 'FOR_PARTS_OR_NOT_WORKING',
+    'scrap': 'FOR_PARTS_OR_NOT_WORKING',
+    'parts': 'FOR_PARTS_OR_NOT_WORKING'
 }
 
 # Grade mappings (common grading systems)
