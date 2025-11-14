@@ -1,0 +1,3 @@
+sku,title,description,condition,category_id,price,quantity,brand,mpn,weight,dimensions,images
+TEST-001,Sample Product - Test Listing,This is a test product for eBay API integration,NEW,58058,29.99,5,Generic,TEST-001,1.0,6x4x2,"https://example.com/image1.jpg,https://example.com/image2.jpg"
+TEST-002,Another Test Product,Second test product for bulk operations,NEW,58058,49.99,10,TestBrand,TB-002,2.0,8x6x3,https://example.com/image3.jpg
