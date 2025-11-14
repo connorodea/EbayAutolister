@@ -92,18 +92,45 @@ Required columns for your CSV file:
 | `description` | ✅ | Product description |
 | `category_id` | ✅ | eBay category ID |
 | `price` | ✅ | Product price |
-| `condition` | ✅ | NEW, USED_EXCELLENT, etc. |
+| `condition` | ✅ | Condition (auto-mapped to eBay standards) |
 | `quantity` | ❌ | Available quantity (default: 1) |
+| `upc` | ❌ | Universal Product Code |
+| `grade` | ❌ | Grade (PSA 1-10, A+/A/B/C, etc.) |
 | `brand` | ❌ | Brand name |
 | `mpn` | ❌ | Manufacturer part number |
 | `weight` | ❌ | Weight in pounds (default: 1.0) |
 | `dimensions` | ❌ | LxWxH in inches (e.g., "6x4x2") |
 | `images` | ❌ | Comma-separated image URLs |
 
+### Condition & Grade Mapping
+
+The system intelligently maps your condition and grade inputs to eBay's standard conditions:
+
+**Condition Examples:**
+- `"new"`, `"brand new"`, `"sealed"` → `NEW`
+- `"open box"`, `"new open box"` → `NEW_OTHER`
+- `"used excellent"`, `"near mint"` → `USED_EXCELLENT`
+- `"seller refurbished"`, `"renewed"` → `SELLER_REFURBISHED`
+- `"for parts"`, `"broken"` → `FOR_PARTS_OR_NOT_WORKING`
+
+**Grade Mapping (PSA/BGS Scale):**
+- Grades `9-10` → `LIKE_NEW`
+- Grades `7.5-8.5` → `USED_EXCELLENT`
+- Grades `6-7` → `USED_VERY_GOOD`
+- Grades `4-5` → `USED_GOOD`
+- Grades `1-3` → `FOR_PARTS_OR_NOT_WORKING`
+
+**Letter Grades:**
+- `A+`, `A` → `USED_EXCELLENT`
+- `B+`, `B` → `USED_VERY_GOOD`
+- `C+`, `C` → `USED_GOOD`
+- `D`, `F` → `FOR_PARTS_OR_NOT_WORKING`
+
 ### Example CSV:
 ```csv
-sku,title,description,condition,category_id,price,quantity,brand,weight,dimensions,images
-TEST-001,Sample Product,Product description,NEW,58058,29.99,5,Generic,1.0,6x4x2,https://example.com/image1.jpg
+sku,title,description,condition,grade,upc,category_id,price,quantity,brand,mpn,weight,dimensions,images
+TEST-001,Apple iPhone 13,Unlocked iPhone 13,used excellent,A,194252707005,9355,499.99,1,Apple,MLPF3LL/A,0.7,6x3x0.3,https://example.com/image1.jpg
+TEST-002,Pokemon Charizard,PSA graded card,graded,9,,2536,850.00,1,Pokemon,4/102,0.1,4x3x0.5,https://example.com/card.jpg
 ```
 
 ## 🛠️ CLI Commands

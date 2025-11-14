@@ -101,12 +101,104 @@ CATEGORY_MAPPINGS = {
     'health_beauty': '26395'     # Health & Beauty
 }
 
-# Condition mappings
+# Comprehensive condition mappings for eBay
 CONDITION_MAPPINGS = {
+    # New conditions
     'new': 'NEW',
-    'used': 'USED_EXCELLENT',
+    'brand new': 'NEW',
+    'sealed': 'NEW',
+    'mint': 'NEW',
+    'unopened': 'NEW',
+    
+    # Like new / Open box
+    'like new': 'LIKE_NEW',
+    'open box': 'NEW_OTHER',
+    'new open box': 'NEW_OTHER',
+    'new other': 'NEW_OTHER',
+    'new without tags': 'NEW_OTHER',
+    'graded': 'LIKE_NEW',  # For trading cards
+    
+    # New with issues
+    'new with defects': 'NEW_WITH_DEFECTS',
+    'new damaged': 'NEW_WITH_DEFECTS',
+    'new imperfect': 'NEW_WITH_DEFECTS',
+    
+    # Refurbished conditions
+    'certified refurbished': 'CERTIFIED_REFURBISHED',
+    'manufacturer refurbished': 'CERTIFIED_REFURBISHED',
+    'excellent refurbished': 'EXCELLENT_REFURBISHED',
+    'very good refurbished': 'VERY_GOOD_REFURBISHED',
+    'good refurbished': 'GOOD_REFURBISHED',
+    'seller refurbished': 'SELLER_REFURBISHED',
     'refurbished': 'SELLER_REFURBISHED',
-    'for_parts': 'FOR_PARTS_OR_NOT_WORKING'
+    'renewed': 'SELLER_REFURBISHED',
+    'restored': 'SELLER_REFURBISHED',
+    
+    # Used conditions
+    'used excellent': 'USED_EXCELLENT',
+    'used like new': 'USED_EXCELLENT',
+    'excellent': 'USED_EXCELLENT',
+    'near mint': 'USED_EXCELLENT',
+    
+    'used very good': 'USED_VERY_GOOD',
+    'very good': 'USED_VERY_GOOD',
+    'light wear': 'USED_VERY_GOOD',
+    
+    'used good': 'USED_GOOD',
+    'good': 'USED_GOOD',
+    'moderate wear': 'USED_GOOD',
+    'normal wear': 'USED_GOOD',
+    
+    'used acceptable': 'USED_ACCEPTABLE',
+    'acceptable': 'USED_ACCEPTABLE',
+    'fair': 'USED_ACCEPTABLE',
+    'heavy wear': 'USED_ACCEPTABLE',
+    'well used': 'USED_ACCEPTABLE',
+    
+    # Apparel specific
+    'pre owned excellent': 'PRE_OWNED_EXCELLENT',
+    'pre owned fair': 'PRE_OWNED_FAIR',
+    'pre-owned excellent': 'PRE_OWNED_EXCELLENT',
+    'pre-owned fair': 'PRE_OWNED_FAIR',
+    
+    # Parts/repair
+    'for parts': 'FOR_PARTS_OR_NOT_WORKING',
+    'not working': 'FOR_PARTS_OR_NOT_WORKING',
+    'broken': 'FOR_PARTS_OR_NOT_WORKING',
+    'parts only': 'FOR_PARTS_OR_NOT_WORKING',
+    'repair': 'FOR_PARTS_OR_NOT_WORKING'
+}
+
+# Grade mappings (common grading systems)
+GRADE_MAPPINGS = {
+    # PSA/BGS grading (1-10 scale)
+    '10': 'LIKE_NEW',  # Gem Mint
+    '9.5': 'LIKE_NEW', # Mint+
+    '9': 'LIKE_NEW',   # Mint
+    '8.5': 'USED_EXCELLENT', # Near Mint+
+    '8': 'USED_EXCELLENT',   # Near Mint
+    '7.5': 'USED_VERY_GOOD', # Excellent+
+    '7': 'USED_VERY_GOOD',   # Excellent
+    '6.5': 'USED_GOOD',      # Excellent-
+    '6': 'USED_GOOD',        # Very Good
+    '5': 'USED_ACCEPTABLE',  # Good
+    '4': 'USED_ACCEPTABLE',  # Very Good-
+    '3': 'USED_ACCEPTABLE',  # Good-
+    '2': 'FOR_PARTS_OR_NOT_WORKING', # Fair
+    '1': 'FOR_PARTS_OR_NOT_WORKING', # Poor
+    
+    # Letter grades
+    'A+': 'LIKE_NEW',
+    'A': 'USED_EXCELLENT',
+    'A-': 'USED_EXCELLENT',
+    'B+': 'USED_VERY_GOOD',
+    'B': 'USED_VERY_GOOD',
+    'B-': 'USED_GOOD',
+    'C+': 'USED_GOOD',
+    'C': 'USED_ACCEPTABLE',
+    'C-': 'USED_ACCEPTABLE',
+    'D': 'FOR_PARTS_OR_NOT_WORKING',
+    'F': 'FOR_PARTS_OR_NOT_WORKING'
 }
 
 def create_sample_env():

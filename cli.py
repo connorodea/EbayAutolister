@@ -8,7 +8,7 @@ import os
 import json
 import logging
 from typing import Optional
-from ebay_autolister import EbayAutolister
+from ebay_autolister import EbayAutolister, ConditionMapper
 from config import Config, create_sample_env
 
 @click.group()
@@ -202,6 +202,36 @@ def test_connection(ctx, marketplace):
             
     except Exception as e:
         click.echo(f"❌ Connection failed: {e}")
+
+@cli.command()
+@click.argument('condition')
+@click.option('--grade', default='', help='Optional grade (PSA 1-10, A+/A/B/C, etc.)')
+def map_condition(condition, grade):
+    """Test condition mapping to eBay standards"""
+    click.echo(f"🔍 Mapping condition: '{condition}' with grade: '{grade}'")
+    
+    ebay_condition = ConditionMapper.map_condition(condition, grade)
+    description = ConditionMapper.get_condition_description(condition, grade)
+    
+    click.echo(f"✅ eBay Condition: {ebay_condition}")
+    click.echo(f"📝 Description: {description}")
+    
+    # Show some examples
+    click.echo("\n💡 Other condition examples:")
+    examples = [
+        ("new", ""),
+        ("open box", ""),
+        ("used excellent", "A"),
+        ("graded", "9"),
+        ("seller refurbished", "B+"),
+        ("for parts", "")
+    ]
+    
+    for cond, gr in examples:
+        if cond != condition.lower():
+            mapped = ConditionMapper.map_condition(cond, gr)
+            grade_text = f" (Grade: {gr})" if gr else ""
+            click.echo(f"  • '{cond}'{grade_text} → {mapped}")
 
 if __name__ == '__main__':
     cli()

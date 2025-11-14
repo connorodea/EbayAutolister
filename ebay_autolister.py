@@ -14,6 +14,7 @@ from typing import Dict, List, Optional, Any
 import logging
 from dataclasses import dataclass
 import pandas as pd
+from config import CONDITION_MAPPINGS, GRADE_MAPPINGS
 
 @dataclass
 class InventoryItem:
@@ -26,6 +27,8 @@ class InventoryItem:
     quantity: int
     brand: str = ""
     mpn: str = ""
+    upc: str = ""
+    grade: str = ""
     weight: float = 1.0
     dimensions: Dict[str, float] = None
     images: List[str] = None
@@ -35,6 +38,83 @@ class InventoryItem:
             self.dimensions = {"length": 10.0, "width": 10.0, "height": 10.0}
         if self.images is None:
             self.images = []
+
+class ConditionMapper:
+    """Utility class for mapping conditions and grades to eBay standards"""
+    
+    @staticmethod
+    def map_condition(condition: str, grade: str = "") -> str:
+        """
+        Map condition/grade to eBay condition enum
+        
+        Args:
+            condition: The condition string from CSV
+            grade: Optional grade (PSA/BGS grade, letter grade, etc.)
+            
+        Returns:
+            Valid eBay condition enum value
+        """
+        # First try to map by grade if provided
+        if grade:
+            grade_clean = str(grade).strip().upper()
+            if grade_clean in GRADE_MAPPINGS:
+                return GRADE_MAPPINGS[grade_clean]
+        
+        # Map by condition
+        condition_clean = condition.lower().strip()
+        
+        # Direct mapping
+        if condition_clean in CONDITION_MAPPINGS:
+            return CONDITION_MAPPINGS[condition_clean]
+        
+        # Fuzzy matching for common variations
+        for key, value in CONDITION_MAPPINGS.items():
+            if key in condition_clean or condition_clean in key:
+                return value
+        
+        # Default fallback based on common terms
+        if any(term in condition_clean for term in ['new', 'mint', 'sealed']):
+            return 'NEW'
+        elif any(term in condition_clean for term in ['excellent', 'near mint']):
+            return 'USED_EXCELLENT'
+        elif any(term in condition_clean for term in ['very good', 'light']):
+            return 'USED_VERY_GOOD'
+        elif any(term in condition_clean for term in ['good', 'normal']):
+            return 'USED_GOOD'
+        elif any(term in condition_clean for term in ['acceptable', 'fair', 'heavy']):
+            return 'USED_ACCEPTABLE'
+        elif any(term in condition_clean for term in ['parts', 'broken', 'repair']):
+            return 'FOR_PARTS_OR_NOT_WORKING'
+        
+        # Ultimate fallback
+        logging.warning(f"Could not map condition '{condition}' with grade '{grade}', defaulting to USED_GOOD")
+        return 'USED_GOOD'
+    
+    @staticmethod
+    def get_condition_description(condition: str, grade: str = "") -> str:
+        """Get a human-readable description for the condition"""
+        ebay_condition = ConditionMapper.map_condition(condition, grade)
+        
+        descriptions = {
+            'NEW': 'Brand new, unopened item in original packaging',
+            'LIKE_NEW': 'Opened but in like-new condition',
+            'NEW_OTHER': 'New item, may be missing original packaging',
+            'NEW_WITH_DEFECTS': 'New item with minor defects',
+            'CERTIFIED_REFURBISHED': 'Certified refurbished by manufacturer',
+            'SELLER_REFURBISHED': 'Refurbished by seller to working condition',
+            'USED_EXCELLENT': 'Used item in excellent condition',
+            'USED_VERY_GOOD': 'Used item in very good condition',
+            'USED_GOOD': 'Used item in good condition',
+            'USED_ACCEPTABLE': 'Used item in acceptable condition',
+            'FOR_PARTS_OR_NOT_WORKING': 'Item for parts or not working'
+        }
+        
+        base_description = descriptions.get(ebay_condition, 'Used item')
+        
+        if grade:
+            return f"{base_description} (Grade: {grade})"
+        
+        return base_description
 
 class EbayAPI:
     """eBay API client with OAuth authentication and rate limiting"""
@@ -146,13 +226,17 @@ class InventoryManager:
     def create_inventory_item(self, item: InventoryItem) -> bool:
         """Create a single inventory item"""
         try:
+            # Map condition using the condition mapper
+            ebay_condition = ConditionMapper.map_condition(item.condition, item.grade)
+            
             inventory_data = {
                 "availability": {
                     "shipToLocationAvailability": {
                         "quantity": item.quantity
                     }
                 },
-                "condition": item.condition,
+                "condition": ebay_condition,
+                "conditionDescription": ConditionMapper.get_condition_description(item.condition, item.grade),
                 "product": {
                     "title": item.title,
                     "description": item.description,
@@ -175,9 +259,17 @@ class InventoryManager:
                 }
             }
             
+            # Add UPC if provided
+            if item.upc:
+                inventory_data["product"]["upc"] = [item.upc]
+            
             # Add brand to aspects if provided
             if item.brand:
                 inventory_data["product"]["aspects"]["Brand"] = [item.brand]
+            
+            # Add grade to aspects if provided
+            if item.grade:
+                inventory_data["product"]["aspects"]["Grade"] = [item.grade]
             
             response = self.api._make_request('PUT', f"inventory_item/{item.sku}", inventory_data)
             self.logger.info(f"Created inventory item: {item.sku}")
@@ -197,6 +289,9 @@ class InventoryManager:
             batch_data = {"requests": []}
             
             for item in batch:
+                # Map condition using the condition mapper
+                ebay_condition = ConditionMapper.map_condition(item.condition, item.grade)
+                
                 inventory_data = {
                     "sku": item.sku,
                     "product": {
@@ -204,9 +299,11 @@ class InventoryManager:
                         "description": item.description,
                         "brand": item.brand,
                         "mpn": item.mpn if item.mpn else item.sku,
-                        "imageUrls": item.images[:12]
+                        "imageUrls": item.images[:12],
+                        "aspects": {}
                     },
-                    "condition": item.condition,
+                    "condition": ebay_condition,
+                    "conditionDescription": ConditionMapper.get_condition_description(item.condition, item.grade),
                     "availability": {
                         "shipToLocationAvailability": {
                             "quantity": item.quantity
@@ -226,8 +323,17 @@ class InventoryManager:
                     }
                 }
                 
+                # Add UPC if provided
+                if item.upc:
+                    inventory_data["product"]["upc"] = [item.upc]
+                
+                # Add brand to aspects if provided
                 if item.brand:
-                    inventory_data["product"]["aspects"] = {"Brand": [item.brand]}
+                    inventory_data["product"]["aspects"]["Brand"] = [item.brand]
+                
+                # Add grade to aspects if provided
+                if item.grade:
+                    inventory_data["product"]["aspects"]["Grade"] = [item.grade]
                 
                 batch_data["requests"].append(inventory_data)
             
@@ -349,6 +455,8 @@ class CSVProcessor:
                     quantity=int(row.get('quantity', 1)),
                     brand=str(row.get('brand', '')),
                     mpn=str(row.get('mpn', '')),
+                    upc=str(row.get('upc', '')),
+                    grade=str(row.get('grade', '')),
                     weight=float(row.get('weight', 1.0)),
                     dimensions=dimensions,
                     images=images
@@ -418,31 +526,67 @@ class EbayAutolister:
         sample_data = [
             {
                 "sku": "TEST-001",
-                "title": "Sample Product - Test Listing",
-                "description": "This is a test product for eBay API integration",
-                "condition": "NEW",
-                "category_id": "58058",  # Cell Phones & Accessories
-                "price": 29.99,
-                "quantity": 5,
-                "brand": "Generic",
-                "mpn": "TEST-001",
-                "weight": 1.0,
-                "dimensions": "6x4x2",
-                "images": "https://example.com/image1.jpg,https://example.com/image2.jpg"
+                "title": "Apple iPhone 13 - Unlocked",
+                "description": "Apple iPhone 13 in excellent condition, fully unlocked and ready to use",
+                "condition": "used excellent",
+                "grade": "A",
+                "upc": "194252707005",
+                "category_id": "9355",  # Cell Phones & Smartphones
+                "price": 499.99,
+                "quantity": 1,
+                "brand": "Apple",
+                "mpn": "MLPF3LL/A",
+                "weight": 0.7,
+                "dimensions": "6x3x0.3",
+                "images": "https://example.com/iphone1.jpg,https://example.com/iphone2.jpg"
             },
             {
                 "sku": "TEST-002",
-                "title": "Another Test Product",
-                "description": "Second test product for bulk operations",
-                "condition": "NEW",
-                "category_id": "58058",
-                "price": 49.99,
-                "quantity": 10,
-                "brand": "TestBrand",
-                "mpn": "TB-002",
-                "weight": 2.0,
-                "dimensions": "8x6x3",
-                "images": "https://example.com/image3.jpg"
+                "title": "Samsung Galaxy Watch4 - Open Box",
+                "description": "Samsung Galaxy Watch4 in open box condition, all accessories included",
+                "condition": "open box",
+                "grade": "",
+                "upc": "887276502946",
+                "category_id": "178893",  # Smart Watches
+                "price": 199.99,
+                "quantity": 3,
+                "brand": "Samsung",
+                "mpn": "SM-R870NZKAXAR",
+                "weight": 1.2,
+                "dimensions": "4x4x2",
+                "images": "https://example.com/watch1.jpg"
+            },
+            {
+                "sku": "TEST-003",
+                "title": "Pokemon Card - Charizard PSA 9",
+                "description": "Charizard Base Set 4/102 Holofoil PSA 9 Mint condition trading card",
+                "condition": "graded",
+                "grade": "9",
+                "upc": "",
+                "category_id": "2536",  # Trading Card Games
+                "price": 850.00,
+                "quantity": 1,
+                "brand": "Pokemon",
+                "mpn": "4/102",
+                "weight": 0.1,
+                "dimensions": "4x3x0.5",
+                "images": "https://example.com/charizard1.jpg,https://example.com/charizard2.jpg"
+            },
+            {
+                "sku": "TEST-004",
+                "title": "Sony PlayStation 5 - Seller Refurbished",
+                "description": "Sony PlayStation 5 console, refurbished by seller, tested and working perfectly",
+                "condition": "seller refurbished",
+                "grade": "B+",
+                "upc": "711719541509",
+                "category_id": "139971",  # Video Game Consoles
+                "price": 399.99,
+                "quantity": 2,
+                "brand": "Sony",
+                "mpn": "CFI-1115A",
+                "weight": 10.5,
+                "dimensions": "15x10x4",
+                "images": "https://example.com/ps5_1.jpg,https://example.com/ps5_2.jpg"
             }
         ]
         

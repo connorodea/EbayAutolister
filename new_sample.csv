@@ -1,0 +1,5 @@
+sku,title,description,condition,grade,upc,category_id,price,quantity,brand,mpn,weight,dimensions,images
+TEST-001,Apple iPhone 13 - Unlocked,"Apple iPhone 13 in excellent condition, fully unlocked and ready to use",used excellent,A,194252707005,9355,499.99,1,Apple,MLPF3LL/A,0.7,6x3x0.3,"https://example.com/iphone1.jpg,https://example.com/iphone2.jpg"
+TEST-002,Samsung Galaxy Watch4 - Open Box,"Samsung Galaxy Watch4 in open box condition, all accessories included",open box,,887276502946,178893,199.99,3,Samsung,SM-R870NZKAXAR,1.2,4x4x2,https://example.com/watch1.jpg
+TEST-003,Pokemon Card - Charizard PSA 9,Charizard Base Set 4/102 Holofoil PSA 9 Mint condition trading card,graded,9,,2536,850.0,1,Pokemon,4/102,0.1,4x3x0.5,"https://example.com/charizard1.jpg,https://example.com/charizard2.jpg"
+TEST-004,Sony PlayStation 5 - Seller Refurbished,"Sony PlayStation 5 console, refurbished by seller, tested and working perfectly",seller refurbished,B+,711719541509,139971,399.99,2,Sony,CFI-1115A,10.5,15x10x4,"https://example.com/ps5_1.jpg,https://example.com/ps5_2.jpg"
