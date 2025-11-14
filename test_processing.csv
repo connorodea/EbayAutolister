@@ -1,0 +1,6 @@
+sku,title,description,condition,grade,upc,category_id,price,quantity,brand,mpn,weight,dimensions,images
+LIKE-NEW-001,iPad Air 5th Gen - Like New Condition,"iPad Air 5th generation in like new condition, minimal signs of use",like new,,194252521175,171485,449.99,1,Apple,MM9F3LL/A,1.0,10x7x0.3,"https://example.com/ipad1.jpg,https://example.com/ipad2.jpg"
+VERY-GOOD-002,MacBook Pro 13-inch - Very Good Condition,"MacBook Pro 13-inch in very good condition, light wear on corners",very good,,194252056844,111422,899.99,1,Apple,MYD82LL/A,3.0,12x8x1,https://example.com/macbook1.jpg
+GOOD-003,Nintendo Switch Console - Good Condition,"Nintendo Switch console in good condition, works perfectly with normal wear",good,,045496452063,139971,199.99,2,Nintendo,HAC-001(-01),1.5,9x4x1,"https://example.com/switch1.jpg,https://example.com/switch2.jpg"
+ACCEPTABLE-004,iPhone 12 - Acceptable Condition,"iPhone 12 in acceptable condition, heavy wear but fully functional",acceptable,,194252031407,9355,299.99,1,Apple,MGJ53LL/A,0.8,6x3x0.3,https://example.com/iphone12.jpg
+SALVAGE-005,Samsung Galaxy S21 - Salvage/Parts Only,"Samsung Galaxy S21 for parts or repair, cracked screen, battery issues",salvage,,887276459042,9355,89.99,1,Samsung,SM-G991U,0.7,6x3x0.3,https://example.com/galaxy_salvage.jpg

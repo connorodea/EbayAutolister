@@ -233,5 +233,59 @@ def map_condition(condition, grade):
             grade_text = f" (Grade: {gr})" if gr else ""
             click.echo(f"  • '{cond}'{grade_text} → {mapped}")
 
+@cli.command()
+def setup():
+    """Interactive setup assistant for eBay API credentials"""
+    click.echo("🚀 Starting eBay Autolister setup assistant...")
+    
+    # Import and run setup assistant
+    import subprocess
+    import sys
+    
+    try:
+        subprocess.run([sys.executable, "setup_assistant.py"], check=True)
+    except subprocess.CalledProcessError:
+        click.echo("❌ Setup assistant failed. Please run: python setup_assistant.py")
+    except FileNotFoundError:
+        click.echo("❌ Setup assistant not found. Please run: python setup_assistant.py")
+
+@cli.command()
+@click.option('--full', is_flag=True, help='Run full test suite including API tests')
+def test(full):
+    """Run eBay Autolister test suite"""
+    if full:
+        click.echo("🧪 Running full test suite...")
+        import subprocess
+        import sys
+        
+        try:
+            result = subprocess.run([sys.executable, "test_suite.py"], check=False)
+            if result.returncode == 0:
+                click.echo("✅ All tests passed!")
+            else:
+                click.echo("❌ Some tests failed. Check output above for details.")
+        except FileNotFoundError:
+            click.echo("❌ Test suite not found. Please run: python test_suite.py")
+    else:
+        click.echo("🔍 Running basic configuration tests...")
+        
+        from config import Config
+        config = Config()
+        
+        # Test configuration
+        if config.validate():
+            click.echo("✅ Configuration valid")
+        else:
+            click.echo("❌ Configuration invalid - check .env file")
+            return
+        
+        # Test condition mapping
+        test_conditions = ["like new", "very good", "good", "acceptable", "salvage"]
+        for condition in test_conditions:
+            mapped = ConditionMapper.map_condition(condition)
+            click.echo(f"✅ '{condition}' → {mapped}")
+        
+        click.echo("\n💡 Run with --full flag to test eBay API connection")
+
 if __name__ == '__main__':
     cli()
